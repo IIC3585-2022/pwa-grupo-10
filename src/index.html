@@ -1,24 +1,78 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>BirdApp</title>
-    <link rel="stylesheet" href="/index.css">
-</head>
-<body>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TwitApp</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="text/css" href="/index.css" rel="stylesheet">
+   <!-- Compiled and minified CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+   <!-- Compiled and minified JavaScript -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script 
     src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous">
   </script>
-  <script type="module" src="./index.js"></script>
-  <link rel="manifest" href="../manifest.json">
-  <div class="container">
-    <header>
-      <h1 class="center">Pajaros de Chiles</h1>
-    </header>
+</head>
+<body class="grey lighten-4">
+
+  <!-- top nav -->
+  <nav class="z-depth-0 light-blue lighten-2">
+    <div class="nav-wrapper container">
+      <a href="/">TodoApp</a>
+    </div>
+  </nav>
+
+  <!-- todos -->
+  <div class="todos container grey-text text-darken-1">
+    
   </div>
 
-
+  <div class="center">
+    <a class="btn-floating btn-small btn-large add-btn sidenav-trigger" data-target="side-form">
+      <i class="material-icons">add</i>
+    </a>
+  </div>
+  <!-- add todo side nav -->
+  <div id="side-form" class="sidenav side-form">
+    <form class="add-recipe container section">
+      <h6 >Nuevo Todo</h6>
+      <div class="divider"></div>
+      <div class="input-field">
+        <input placeholder="e.g. Tarea" id="todo" type="text" class="validate">
+        <label for="title">Todo</label>
+      </div>
+      <div class="input-field">
+        <input placeholder="06-06-06" id="date" type="text" class="datepicker">
+        <label for="ingredients">Fecha</label>
+      </div>
+      <div class="input-field center">
+        <button class="btn-small light-blue lighten-2">Agregar</button>
+      </div>
+    </form>
+  </div>
+  <!-- edit todo side nav -->
+  <div id="side-form-edit" class="sidenav side-form-edit">
+    <form class="add-recipe container section">
+      <h6 >Editar Todo</h6>
+      <div class="divider"></div>
+      <div class="input-field">
+        <input placeholder="e.g. Tarea" id="todo" type="text" class="validate">
+        <label for="title">Todo</label>
+      </div>
+      <div class="input-field">
+        <input placeholder="06-06-06" id="date" type="text" class="datepicker">
+        <label for="ingredients">Fecha</label>
+      </div>
+      <div class="input-field center">
+        <button class="btn-small light-blue lighten-2">Editar</button>
+      </div>
+    </form>
+  </div>
+  <script type="text/javascript" src="ui.js"></script>
 </body>
 </html>
+

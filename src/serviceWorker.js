@@ -1,4 +1,4 @@
-const staticAssets = [
+/* const staticAssets = [
   './',
   './index.css',
   './index.js'
@@ -37,4 +37,4 @@ async function networkFirst(request) {
 
   }
 
-}
+} */

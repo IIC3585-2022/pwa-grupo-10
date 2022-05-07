@@ -7,7 +7,7 @@ async function fetchBirds() {
 
 
 
-window.addEventListener('load', async e => {
+/* window.addEventListener('load', async e => {
   fetchBirds().then(res => {
     res.forEach(bird => {
       $('.container').append(`<p>${bird.name.spanish}</p>`)
@@ -23,4 +23,4 @@ window.addEventListener('load', async e => {
 
       }
   }
-});
+}); */
