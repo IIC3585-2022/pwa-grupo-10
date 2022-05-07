@@ -36,7 +36,7 @@
     </a>
   </div>
 
-<div id="side-form-edit" class="side-form-edit">
+<div id="side-form" class="sidenav side-form">
 
  <form class="add container section">
    <div class="divider"></div>
@@ -53,6 +53,25 @@
  </form>
 </div>
 
+<!-- edit todo side nav -->
+<div id="side-form-edit" class="sidenav side-form-edit">
+  <form class="add-recipe container section">
+    <h6 >Editar Todo</h6>
+    <div class="divider"></div>
+    <div class="input-field">
+      <input placeholder="e.g. Tarea" id="todo" type="text" class="validate">
+      <label for="title">Todo</label>
+    </div>
+    <div class="input-field">
+      <input placeholder="06-06-06" id="date" type="text" class="datepicker">
+      <label for="ingredients">Fecha</label>
+    </div>
+    <div class="input-field center">
+      <button class="btn-small light-blue lighten-2">Editar</button>
+    </div>
+  </form>
+</div>
+
 
 <form class="delete container section" >
   <label for="id">Document id:</label>
@@ -63,6 +82,18 @@
   
   <div class="input-field center">
     <button class="btn-small light-blue lighten-2">delete a twit</button>
+  </div>
+  
+</form>
+
+<form class="update container section">
+  <label for="id">Document id:</label>
+  <div class="input-field">
+    <input type="text" name="id" required>
+  </div>
+  
+  <div class="input-field center">
+    <button class="btn-small light-blue lighten-2">update a twit</button>
   </div>
   
 </form>

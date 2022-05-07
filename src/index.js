@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import {
   getFirestore, collection, onSnapshot,
-  addDoc, deleteDoc, doc, orderBy, query, serverTimestamp
+  addDoc, deleteDoc, doc, orderBy, query, serverTimestamp, updateDoc
 } from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -65,7 +65,20 @@ deleteTwitForm.addEventListener('submit', (e) => {
     })
 })
 
+// updating a document
+const updateForm = document.querySelector('.update')
+updateForm.addEventListener('submit', (e) => {
+  e.preventDefault()
 
+  let docRef = doc(db, 'twits', updateForm.id.value)
+
+  updateDoc(docRef, {
+    title: 'updated title'
+  })
+  .then(() => {
+    updateForm.reset()
+  })
+})
 
 
 
