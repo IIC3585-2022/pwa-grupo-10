@@ -1,4 +1,4 @@
-const todos = [{id: 1, title: 'lavar la ropa', date:'11-05-2022'}]
+
 const renderTweet = ({id, title, date}) => {
   return (
     `
@@ -20,9 +20,11 @@ const renderTweet = ({id, title, date}) => {
   )
 }
 
-
-$('.todos').append(renderTweet(todos[0]));
-
+export const showNotification = (title, options) => {
+  if (Notification.permission==='granted') {
+    const notification = new Notification(title,options)
+  }
+}
 
 
 $(document).ready(function(){
@@ -31,6 +33,6 @@ $(document).ready(function(){
   const edit = $('.side-form-edit')
   M.Sidenav.init(forms, {edge: 'left'});
   M.Sidenav.init(edit, {edge: 'left'});
-  $('.datepicker').datepicker();
+  //$('.datepicker').datepicker();
 });
-        
+

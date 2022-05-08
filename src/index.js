@@ -1,8 +1,11 @@
 import { initializeApp } from 'firebase/app'
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import {
   getFirestore, collection, onSnapshot, getDoc, getDocs,
   addDoc, deleteDoc, doc, orderBy, query, serverTimestamp, updateDoc, QuerySnapshot
 } from 'firebase/firestore'
+
+import {showNotification} from './ui';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -15,9 +18,47 @@ const firebaseConfig = {
   measurementId: "G-DMFEH25Z0F"
 };
 
-// init firebase app
-initializeApp(firebaseConfig)
+const sendMessage = async (token, payload) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "key=AAAA9BdF8_4:APA91bHA44Gu9cQYcXF65XFTdqIG8eq1uV8rndADMf2Fl0ZLYUla-LkfGDmr19n8DemVp82v8YGg3Eh2nCB1_jHxmmvB_ibbTRkTjMlgq_XVjnoAQYTlm48o-Qd2zdyxvhzurWGVCmhr");
 
+  const raw = JSON.stringify({
+  "data": payload,
+  "to": token,
+  "direct_boot_ok": true
+});
+
+  const requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
+}
+
+// init firebase app
+const app = initializeApp(firebaseConfig)
+const messaging = getMessaging(app);
+  getToken(messaging, { vapidKey: 'BMkAUfZsZYDY78Kd35zFvwkXAU7gnEE-awpwsL7FVIXlyRonFucIzTHFzxxCOCDuiyzcwGL-BZSSNZJmfiesY7I' }).then((currentToken) => {
+    if (currentToken) {
+      sendMessage(currentToken, {text:'Bienvenido a la TodoApp'})
+    } else {
+      // Show permission request UI
+      console.log('No registration token available. Request permission to generate one.');
+      // ...
+    }
+  }).catch((err) => {
+    console.log('An error occurred while retrieving token. ', err);
+    // ...
+  });
+onMessage(messaging, (payload) => {
+  console.log('Message received. ', payload);
+  showNotification('Notificación', {body:payload.data.text})
+  // ...
+});
 // init services
 const db = getFirestore()
 
@@ -44,7 +85,6 @@ const updateTask = (id, newFields) =>
 //------------------------------
 
 window.addEventListener("DOMContentLoaded", async () => {
-
   onSnapshot(collection(db,"tasks"), (querySnapshot) => {
 
     let html = "";
@@ -92,7 +132,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     
   });
   
+  
 });
+
 //------------------------------
 
 taskForm.addEventListener("submit", async (e) => {
@@ -124,12 +166,6 @@ taskFormEdit.addEventListener("submit", async (e) => {
 
 
 
-async function fetchBirds() {
-  const res = await fetch('https://aves.ninjas.cl/api/birds');
-  return await res.json();
-
-}
-
 
 
 /* window.addEventListener('load', async e => {
@@ -149,3 +185,16 @@ async function fetchBirds() {
       }
   }
 }); */
+
+
+if ('serviceWorker' in navigator) {
+  try {
+    navigator.serviceWorker.register('firebase-messaging-sw.js');
+    console.log('Firebase SW registered');
+
+} catch (error) {
+    console.log('SW failed');
+
+}
+    
+}
