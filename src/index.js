@@ -44,7 +44,7 @@ const saveToken = (token) => {
   onSnapshot(q, (snapshot) => {
     const exists = snapshot.docs.length
     if (!exists) {
-      const timestamp = new Date().toISOString();
+      const timestamp = new Date().toLocaleString();
       addDoc(collection(db, "tokens"), {value:token, timestamp});
     }
   })
