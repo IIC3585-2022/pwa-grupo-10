@@ -23,6 +23,7 @@ const db = getFirestore()
 
 //------------------------------
 const taskForm = document.getElementById("task-form");
+const taskFormEdit = document.getElementById("task-form-edit");
 const tasksContainer = document.getElementById("tasks-container");
 
 let editStatus = false;
@@ -60,7 +61,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           🗑 Delete
           </button>
           
-          <button class="sidenav-trigger btn btn-secondary btn-edit" data-target="side-form" data-id="${doc.id}">
+          <button class="sidenav-trigger btn btn-secondary btn-edit" data-target="side-form-edit" data-id="${doc.id}">
             🖉 Edit
           </button>
 
@@ -77,13 +78,12 @@ window.addEventListener("DOMContentLoaded", async () => {
       })
     });
 
-
     const btnsEdit = tasksContainer.querySelectorAll(".btn-edit");
     btnsEdit.forEach(btn =>{
       btn.addEventListener('click', async (e) => {
         const doc = await getTask(e.target.dataset.id)
         const task = doc.data()
-        // taskForm['task-title'].value = task.title;
+        taskFormEdit['task-title'].value = task.title;
 
         editStatus = true;
         id = e.target.dataset.id;
@@ -99,17 +99,7 @@ taskForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const title = taskForm["task-title"];
   try {
-    if (!editStatus) {
-      await saveTask(title.value);
-    } else {
-      await updateTask(id, {
-        title: title.value,
-      });
-
-      editStatus = false;
-      id = "";
-    }
-
+    await saveTask(title.value);
     taskForm.reset();
     title.focus();
   } catch (error) {
@@ -117,6 +107,20 @@ taskForm.addEventListener("submit", async (e) => {
   }
 });
 
+taskFormEdit.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const title = taskFormEdit["task-title"];
+  try {
+    await updateTask(id, {
+      title: title.value,});
+    editStatus = false;
+    id = "";
+    taskFormEdit.reset();
+    title.focus();
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 
 
