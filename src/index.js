@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import {
-  getFirestore, collection, onSnapshot,
-  addDoc, deleteDoc, doc, orderBy, query, serverTimestamp, updateDoc
+  getFirestore, collection, onSnapshot, getDoc, getDocs,
+  addDoc, deleteDoc, doc, orderBy, query, serverTimestamp, updateDoc, QuerySnapshot
 } from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -21,64 +21,101 @@ initializeApp(firebaseConfig)
 // init services
 const db = getFirestore()
 
+//------------------------------
+const taskForm = document.getElementById("task-form");
+const tasksContainer = document.getElementById("tasks-container");
 
-// collection ref
-const colRef = collection(db, 'twits')
+let editStatus = false;
+let id = "";
+//-----------------------------
+// Funciones
+const saveTask = (title) =>
+  addDoc(collection(db, "tasks"), {title});
+  
+const onGetTasks = (callback) =>
+  onSnapshot(collection(db, "tasks"), callback);
 
-// queries
-const q = query(colRef, orderBy('createdAt'))
+const getTask = (id) => getDoc(doc(db, "tasks", id));
+const getTasks = () => getDocs(collection(db, "tasks"));
+const deleteTask = (id) => deleteDoc(doc(db, "tasks", id));
+const updateTask = (id, newFields) =>
+  updateDoc(doc(db, "tasks", id), newFields);
+//------------------------------
 
-// get collection data
-onSnapshot(colRef, (snapshot) => {
-  let twits = []
-  snapshot.docs.forEach(doc => {
-    twits.push({ ...doc.data(), id: doc.id })
-  })
-  console.log(twits)
-})
+window.addEventListener("DOMContentLoaded", async () => {
+
+  onSnapshot(collection(db,"tasks"), (querySnapshot) => {
+
+    let html = "";
+
+    querySnapshot.forEach((doc)=> {
+      const task = doc.data();
+      html +=    `
+      <div class="card-panel todo white row data-id=${task.id}">
+        <div class="todo-content">
+          <div class="todo-title">${task.title}</div>
+        </div>
+          <div>
+          <button class="btn btn-primary btn-delete" data-id="${doc.id}">
+          🗑 Delete
+          </button>
+          
+          <button class="sidenav-trigger btn btn-secondary btn-edit" data-target="side-form" data-id="${doc.id}">
+            🖉 Edit
+          </button>
+
+        </div> 
+      </div>
+      `;
+    });
+    tasksContainer.innerHTML = html;
+    const btnsDelete = tasksContainer.querySelectorAll(".btn-delete");
+
+    btnsDelete.forEach(btn =>{
+      btn.addEventListener('click', (e) =>{
+        deleteTask(e.target.dataset.id)
+      })
+    });
 
 
-// adding docs
-const addTwitForm = document.querySelector('.add') 
-addTwitForm.addEventListener('submit', (e) => {
-  e.preventDefault()
+    const btnsEdit = tasksContainer.querySelectorAll(".btn-edit");
+    btnsEdit.forEach(btn =>{
+      btn.addEventListener('click', async (e) => {
+        const doc = await getTask(e.target.dataset.id)
+        const task = doc.data()
+        // taskForm['task-title'].value = task.title;
 
-  addDoc(colRef, {
-    title: addTwitForm.title.value,
-    createdAt: serverTimestamp()
-  })
-  .then(() => {
-    addTwitForm.reset()
-  })
-})
-
-// deleting docs
-const deleteTwitForm = document.querySelector('.delete')
-deleteTwitForm.addEventListener('submit', (e) => {
-  e.preventDefault()
-
-  const docRef = doc(db, 'twits', deleteTwitForm.id.value)
-
-  deleteDoc(docRef)
-    .then(() => {
-      deleteTwitForm.reset()
+        editStatus = true;
+        id = e.target.dataset.id;
+        })
     })
-})
+    
+  });
+  
+});
+//------------------------------
 
-// updating a document
-const updateForm = document.querySelector('.update')
-updateForm.addEventListener('submit', (e) => {
-  e.preventDefault()
+taskForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const title = taskForm["task-title"];
+  try {
+    if (!editStatus) {
+      await saveTask(title.value);
+    } else {
+      await updateTask(id, {
+        title: title.value,
+      });
 
-  let docRef = doc(db, 'twits', updateForm.id.value)
+      editStatus = false;
+      id = "";
+    }
 
-  updateDoc(docRef, {
-    title: 'updated title'
-  })
-  .then(() => {
-    updateForm.reset()
-  })
-})
+    taskForm.reset();
+    title.focus();
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 
 

@@ -28,7 +28,9 @@
   </nav>
 
   <!-- todos -->
-  <div class="todos container grey-text text-darken-1"></div>
+  <div class="container grey-text text-darken-1" id="tasks-container"></div>
+  <div class="col-md-6" id="tasks-container"></div>
+
 
   <div class="center">
     <a class="btn-floating btn-small btn-large add-btn sidenav-trigger" data-target="side-form">
@@ -38,66 +40,39 @@
 
 <div id="side-form" class="sidenav side-form">
 
- <form class="add container section">
+ <form id="task-form" class="add container section">
    <div class="divider"></div>
 
    <div class="input-field">
      <label for="title">Title:</label>
-     <input placeholder="e.g. Tarea 1" type="text" name="title" required>
+     <input placeholder="e.g. Tarea 1" id="task-title" type="text" name="title" required>
    </div>
 
    <div class="input-field center">
-     <button class="btn-small light-blue lighten-2">Add a new Twit</button>
+     <button class="btn-small light-blue lighten-2" id="btn-task-form">Add/Update</button>
    </div>
 
  </form>
 </div>
 
+<!-- Tasks List -->
+  <div class="col-md-6" id="tasks-container"></div>
+
 <!-- edit todo side nav -->
 <div id="side-form-edit" class="sidenav side-form-edit">
-  <form class="add-recipe container section">
-    <h6 >Editar Todo</h6>
+  <form id="task-form-edit" class="add-recipe container section">
+    <h6 >Edit</h6>
     <div class="divider"></div>
     <div class="input-field">
-      <input placeholder="e.g. Tarea" id="todo" type="text" class="validate">
+      <input id="task-title" placeholder="e.g. Tarea"  type="text" class="validate">
       <label for="title">Todo</label>
     </div>
-    <div class="input-field">
-      <input placeholder="06-06-06" id="date" type="text" class="datepicker">
-      <label for="ingredients">Fecha</label>
-    </div>
+    
     <div class="input-field center">
       <button class="btn-small light-blue lighten-2">Editar</button>
     </div>
   </form>
 </div>
-
-
-<form class="delete container section" >
-  <label for="id">Document id:</label>
-  <div class="divider"></div>
-  <div class="input-field">
-    <input type="text" name="id" required>
-  </div>
-  
-  <div class="input-field center">
-    <button class="btn-small light-blue lighten-2">delete a twit</button>
-  </div>
-  
-</form>
-
-<form class="update container section">
-  <label for="id">Document id:</label>
-  <div class="input-field">
-    <input type="text" name="id" required>
-  </div>
-  
-  <div class="input-field center">
-    <button class="btn-small light-blue lighten-2">update a twit</button>
-  </div>
-  
-</form>
-
 
 <script type="text/javascript" src="ui.js"></script>
 <script src="bundle.js"></script>
