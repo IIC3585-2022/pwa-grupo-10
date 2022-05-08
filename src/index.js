@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app'
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import {
   getFirestore, collection, onSnapshot, getDoc, getDocs,
-  addDoc, deleteDoc, doc, orderBy, query, serverTimestamp, updateDoc, QuerySnapshot
+  addDoc, deleteDoc, doc, orderBy, query, serverTimestamp, updateDoc, QuerySnapshot,where
 } from 'firebase/firestore'
 
 import {showNotification} from './ui';
@@ -38,12 +38,24 @@ const sendMessage = async (token, payload) => {
 
 fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
 }
+const saveToken = (token) => {
+  const tokensRef = collection(db, "tokens");
+  const q = query(tokensRef, where("value", "==", token));
+  onSnapshot(q, (snapshot) => {
+    const exists = snapshot.docs.length
+    if (!exists) {
+      const timestamp = new Date().toISOString();
+      addDoc(collection(db, "tokens"), {value:token, timestamp});
+    }
+  })
+}
 
 // init firebase app
 const app = initializeApp(firebaseConfig)
 const messaging = getMessaging(app);
   getToken(messaging, { vapidKey: 'BMkAUfZsZYDY78Kd35zFvwkXAU7gnEE-awpwsL7FVIXlyRonFucIzTHFzxxCOCDuiyzcwGL-BZSSNZJmfiesY7I' }).then((currentToken) => {
     if (currentToken) {
+      saveToken(currentToken)
       sendMessage(currentToken, {text:'Bienvenido a la TodoApp'})
     } else {
       // Show permission request UI
@@ -76,6 +88,7 @@ const saveTask = (title) =>
   
 const onGetTasks = (callback) =>
   onSnapshot(collection(db, "tasks"), callback);
+
 
 const getTask = (id) => getDoc(doc(db, "tasks", id));
 const getTasks = () => getDocs(collection(db, "tasks"));
