@@ -7,16 +7,16 @@ const staticAssets = [
   'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js',
 ];
-const staticCacheName = 'site-static-v1'
+const staticCacheName = 'site-static-v3'
 const dynamicCacheName= 'site-dynamic-v1'
 
 self.addEventListener('install', async event => {
-  event.waitUntil(
-    await caches.open('staticCacheName').then(cache => {
-      console.log("caching assets")
-      cache.addAll(staticAssets)
-    })
-  )
+  
+  await caches.open('staticCacheName').then(cache => {
+    console.log("caching assets")
+    cache.addAll(staticAssets)
+  })
+  
   
 });
 
@@ -27,7 +27,7 @@ self.addEventListener('activate', evt => {
     caches.keys().then(keys => {
       //console.log(keys);
       return Promise.all(keys
-        .filter(key => key !== staticCacheName)
+        .filter(key => key !== staticCacheName && key !== dynamicCacheName)
         .map(key => caches.delete(key))
       );
     })
@@ -44,6 +44,6 @@ self.addEventListener('fetch', event => {
           return fetchRes;
         })
       });
-    })
+    }).catch(() => caches.match('/fallback.html'))
   );
 });

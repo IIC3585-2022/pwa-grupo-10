@@ -20,7 +20,7 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = 'Notificación';
   const notificationOptions = {
     body: payload.data.text,
-    icon: './images/icon-192x192.png',
+    icon: './src/images/icon-192x192.png',
     click_option: 'https://aquamarine-gaufre-449678.netlify.app/'
   };
 
