@@ -22,7 +22,7 @@ const renderTweet = ({id, title, date}) => {
 
 export const showNotification = (title, options) => {
   if (Notification.permission==='granted') {
-    const notification = new Notification(title,options)
+    const notification = new Notification(title,{...options, icon: './images/icon-192x192.png', click_option: 'https://aquamarine-gaufre-449678.netlify.app/'})
   }
 }
 

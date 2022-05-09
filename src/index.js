@@ -182,11 +182,6 @@ taskFormEdit.addEventListener("submit", async (e) => {
 
 
 /* window.addEventListener('load', async e => {
-  fetchBirds().then(res => {
-    res.forEach(bird => {
-      $('.container').append(`<p>${bird.name.spanish}</p>`)
-    })
-  })
   if ('serviceWorker' in navigator) {
       try {
           navigator.serviceWorker.register('serviceWorker.js');
