@@ -7,7 +7,8 @@ const staticAssets = [
   'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js',
 ];
-const staticCacheName = 'site-static'
+const staticCacheName = 'site-static-v1'
+const dynamicCacheName= 'site-dynamic-v1'
 
 self.addEventListener('install', async event => {
   event.waitUntil(
@@ -19,55 +20,30 @@ self.addEventListener('install', async event => {
   
 });
 
-// install event
-self.addEventListener('install', event => {
-  //console.log('service worker installed');
-  event.waitUntil(
-    caches.open(staticCacheName).then((cache) => {
-      console.log('caching shell assets');
-      cache.addAll(assets);
+// activate event
+self.addEventListener('activate', evt => {
+  //console.log('service worker activated');
+  evt.waitUntil(
+    caches.keys().then(keys => {
+      //console.log(keys);
+      return Promise.all(keys
+        .filter(key => key !== staticCacheName)
+        .map(key => caches.delete(key))
+      );
     })
   );
 });
 
-
+// fetch event
 self.addEventListener('fetch', event => {
-  //console.log('fetch event', evt);
   event.respondWith(
-    caches.match(event.request).then(cacheResponse => {
-      return cacheResponse || fetch(event.request);
+    caches.match(event.request).then(cacheRes => {
+      return cacheRes || fetch(event.request).then(fetchRes => {
+        return caches.open(dynamicCacheName).then(cache => {
+          cache.put(event.request.url, fetchRes.clone());
+          return fetchRes;
+        })
+      });
     })
   );
 });
-
-/*
-self.addEventListener('fetch', event => {
-  const {request} = event;
-  const url = new URL(request.url);
-  if(url.origin === location.origin) {
-      event.respondWith(cacheData(request));
-  } else {
-      event.respondWith(networkFirst(request));
-  }
-
-});
-
-async function cacheData(request) {
-  const cachedResponse = await caches.match(request);
-  return cachedResponse || fetch(request);
-}
-
-async function networkFirst(request) {
-  const cache = await caches.open('dynamic-birds');
-
-  try {
-      const response = await fetch(request);
-      cache.put(request, response.clone());
-      return response;
-  } catch (error){
-      return await cache.match(request);
-
-  }
-
-}
-*/

@@ -206,12 +206,5 @@ if ('serviceWorker' in navigator) {
       console.log('SW failed');
 
   }
-
-  try{
-    navigator.serviceWorker.register('serviceWorker.js');
-    console.log('Cache SW registered');
-  }catch(error){
-    console.log("cache SW Failed")
-  }
     
 }
