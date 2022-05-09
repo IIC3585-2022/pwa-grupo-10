@@ -198,11 +198,13 @@ taskFormEdit.addEventListener("submit", async (e) => {
 if ('serviceWorker' in navigator) {
   try {
     navigator.serviceWorker.register('firebase-messaging-sw.js');
+    navigator.serviceWorker.register('serviceWorker.js');
+    console.log('Cache SW registered');
     console.log('Firebase SW registered');
 
-} catch (error) {
-    console.log('SW failed');
+  } catch (error) {
+      console.log('SW failed');
 
-}
+  }
     
 }
