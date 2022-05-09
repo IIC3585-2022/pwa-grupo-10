@@ -1,14 +1,46 @@
-/* const staticAssets = [
+const staticAssets = [
   './',
   './index.css',
-  './index.js'
+  './index.js',
+  './ui.js',
+  'https://fonts.googleapis.com/icon?family=Material+Icons',
+  'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css',
+  'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js',
 ];
+const staticCacheName = 'site-static'
 
 self.addEventListener('install', async event => {
-  const cache = await caches.open('static-birds');
-  cache.addAll(staticAssets);
+  event.waitUntil(
+    await caches.open('staticCacheName').then(cache => {
+      console.log("caching assets")
+      cache.addAll(staticAssets)
+    })
+  )
+  
 });
 
+// install event
+self.addEventListener('install', event => {
+  //console.log('service worker installed');
+  event.waitUntil(
+    caches.open(staticCacheName).then((cache) => {
+      console.log('caching shell assets');
+      cache.addAll(assets);
+    })
+  );
+});
+
+
+self.addEventListener('fetch', event => {
+  //console.log('fetch event', evt);
+  event.respondWith(
+    caches.match(event.request).then(cacheResponse => {
+      return cacheResponse || fetch(event.request);
+    })
+  );
+});
+
+/*
 self.addEventListener('fetch', event => {
   const {request} = event;
   const url = new URL(request.url);
@@ -37,4 +69,5 @@ async function networkFirst(request) {
 
   }
 
-} */
+}
+*/
